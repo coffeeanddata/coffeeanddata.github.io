@@ -13,6 +13,8 @@
 	<script src="https://d3js.org/d3.v4.0.0-rc.2.js" charset="utf-8"></script>
 	<script src="javascripts/robustD3.js" charset="utf-8"></script>
 	<script src="javascripts/barCharts.js" charset="utf-8"></script>
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
   </head>
 
   <body>
@@ -21,20 +23,62 @@
     <div id="header_wrap" class="outer">
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/coffeeanddata">View on GitHub</a>
-
-          <h1 id="project_title">Coffeeanddata.GitHub.io</h1>
-          <h2 id="project_tagline"></h2>
+          <h1 id="project_title">Robust D3</h1>
+		  <h3 id="project_tagline">By Coffee and Data <br>A simplified approach to D3</br> </h3>
 
         </header>
     </div>
-
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
+        <h4>
+			Welcome to Robust D3 HomePage
+		</h4>
+		<p>
+			Robust D3 follows the simplified approach of data visualization found in Python and R without trying to remove the signature visualization power found in D3. That being said, this is currently in beta, and Robust D3 only has 2 plots, barplots and scatterplots. The code below shows how easy it is to create the first barplot.
+		</p>
+		<p>
+			Only 3 steps are required to create a plot:
+			<ol>
+				<li>Create Canvas: canvas(canvasID, width px, height px, appendTo <optional>)</li>
+				<li>Create Plot: canvas.plotName()</li>
+				<li>Graph Features</b>: canvas.featureFunction()</li>
+			</ol>
+		</p>
+			<pre class="prettyprint">
+				<code>
+//canvas(id, width, height)
+var barPlot = canvas("barPlot", 800, 650, "#main_content_wrap");	
+barPlot.barPlot(USAdata, "institution", "score"); //barPlot(data, x, y)
 
+//The rest of the code are features to make visually pleasing graphs
+barPlot.createTips("world_rank") //tooltip data variable
+var fillColor = function(d) { return "#728c3f"; } //static color 
+barPlot.colorFeature("instiution", fillColor) // colorFeature( fill by variable, fill scale)
+barPlot.updateDesc("", "Score", "Top 40 Internationally Ranked USA Institution") //updateDesc(x label, yLabel, TItle)
+barPlot.rotateText("x", -90, "end", -1, -.5) //rotateText(axis to rate, by degrees, text append at, move text by , move text by)
+				</code>
+			</pre>
 
+		<p>
+		Robust D3 power is to simplify attributes for a plot. For example, In order to create a horizontal barplot, all you have to assign is the numeric value in the x axis and character value in the y axis. Robust D3 handles scaling. 
+		</p>
+			<pre class="prettyprint">
+				<code>
+// Horizontal bar plot
+var horizontalBarPlot = canvas("HorizontalbarPlot", 800, 650, "#main_content_wrap");	
+horizontalBarPlot.barPlot(data2015, "score", "institution"); //score is an integer field and instituion is a character field
 
+// Graph Features
+horizontalBarPlot.createTips("country")
+var countryScale = d3.scaleOrdinal().range(["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"]);
+horizontalBarPlot.colorFeature("country", countryScale)
+horizontalBarPlot.updateDesc("Score", "", "Top 30 World Ranked Institution ")
+				</code>
       </section>
+		<p>
+			
+		</p>
     </div>
 
     <!-- FOOTER  -->
@@ -43,8 +87,5 @@
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-
-    
-
   </body>
 </html>

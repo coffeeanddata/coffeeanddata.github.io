@@ -163,28 +163,33 @@ pre, code {
   background-color: #fff;
 
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  font-size: 14px;
+  font-size: 12px;
 
-  border-radius: 2px;
+/*  border-radius: 2px; 
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
+  */
 }
+
 
 pre {
   width: 100%;
-  padding: 10px;
+ /* padding: 10px; 
   box-shadow: 0 0 10px rgba(0,0,0,.1);
+  */
   overflow: auto;
 }
 
 code {
-  padding: 3px;
-  margin: 0 3px;
+/*  padding: 3px;
+  margin: 0 3px; 
   box-shadow: 0 0 10px rgba(0,0,0,.1);
+*/
 }
 
+
 pre code {
-  display: block;
+ /* display: block; */
   box-shadow: none;
 }
 
@@ -192,7 +197,9 @@ blockquote {
   color: #666;
   margin-bottom: 20px;
   padding: 0 0 0 20px;
+  /*
   border-left: 3px solid #bbb;
+  */
 }
 
 
@@ -261,7 +268,11 @@ Full-Width Styles
 *******************************************************************************/
 
 .outer {
-  width: 100%;
+/*  width: 100%;
+ */
+/*two lines below are mine */
+	width : 90%;
+	margin : auto;
 }
 
 .inner {
@@ -297,6 +308,12 @@ Full-Width Styles
 
 #header_wrap .inner {
   padding: 50px 10px 30px 10px;
+}
+
+#main_content {
+	max-width : 70%;
+
+
 }
 
 #project_title {
@@ -422,4 +439,10 @@ Small Device Styles
     font-size: 11px;
   }
 
+}
+
+
+
+pre.prettyprint {
+	border: none !important;
 }

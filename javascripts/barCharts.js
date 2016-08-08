@@ -21,7 +21,7 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 
 
 	//canvas(id, width, height)
-	var barPlot = canvas("barPlot", 800, 650, "#main_content_wrap");	
+	var barPlot = canvas("barPlot", 700, 650, "#main_content_wrap");	
 	barPlot.barPlot(USAdata, "institution", "score"); //barPlot(data, x, y)
 	barPlot.createTips("world_rank") //tooltip data variable
 	var fillColor = function(d) { return "#728c3f"; } //static color 
@@ -31,7 +31,7 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 
 	// Horizontal bar plot
 	var data2015 = data.filter(function(x) { return x.year == "2015"; }).slice(0, 30)
-	var horizontalBarPlot = canvas("HorizontalbarPlot", 800, 650, "#main_content_wrap");	
+	var horizontalBarPlot = canvas("HorizontalbarPlot", 700, 650, "#main_content_wrap");	
 	horizontalBarPlot.barPlot(data2015, "score", "institution");
 	horizontalBarPlot.createTips("country")
 	var countryScale = d3.scaleOrdinal().range(["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"]);
@@ -40,7 +40,7 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 
 	// grouped bar plot
 	dataUC = data.filter(function(x) { return x.institution.indexOf("University of California") >= 0; }).slice(0, 30)
-	var canvasUC = canvas("groupBarPlot", 800, 650, "#main_content_wrap");	
+	var canvasUC = canvas("groupBarPlot", 700, 650, "#main_content_wrap");	
 	canvasUC.barPlot(dataUC, "institution", "world_rank_rev", "year"); 
 	canvasUC.colorFeature("year", countryScale)
 	canvasUC.createTips("year")
@@ -49,7 +49,7 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 
 
 	// Horizontal Stacked Barplot
-	var canvasUC_H_stacked = canvas("HorizontalStackedBar",800 , 650, "#main_content_wrap");	
+	var canvasUC_H_stacked = canvas("HorizontalStackedBar",700 , 650, "#main_content_wrap");	
 	canvasUC_H_stacked.barPlot(dataUC, "world_rank_rev", "institution","year", true); 
 	canvasUC_H_stacked.colorFeature("year", countryScale)
 	canvasUC_H_stacked.createTips("year")
@@ -57,7 +57,7 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 	
 
 	// Horizontal Stacked Barplot
-	var barChartUpdate = canvas("stackedandGrouped", 800, 650, "#main_content_wrap");	
+	var barChartUpdate = canvas("stackedandGrouped", 700, 650, "#main_content_wrap");	
 	barChartUpdate.barPlot(dataUC, "institution", "publications","year", true); 
 	barChartUpdate.barChartTransition()
 	barChartUpdate.colorFeature("year", countryScale)
@@ -66,10 +66,10 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 	barChartUpdate.rotateText("x", -90, "end", -1, -.5) //rotateText(axis to rate, by degrees, text append at, move text by , move text by)
 
 	getButton = document.getElementsByClassName("stackedandGrouped_updateButton")
-	getButton[1].click()
+	setTimeout(getButton[1].click(), 1000)
 
 
-	var HbarChartUpdate = canvas("HorizontalstackedandGrouped", 800, 650, "#main_content_wrap");	
+	var HbarChartUpdate = canvas("HorizontalstackedandGrouped", 700, 650, "#main_content_wrap");	
 	HbarChartUpdate.barPlot(dataUC, "publications", "institution", "year", true); 
 	HbarChartUpdate.barChartTransition()
 	HbarChartUpdate.colorFeature("year", countryScale)
