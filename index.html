@@ -24,7 +24,7 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/coffeeanddata">View on GitHub</a>
           <h1 id="project_title">Robust D3</h1>
-		  <h3 id="project_tagline">By Coffee and Data <br>A simplified approach to D3</br> </h3>
+		  <h3 id="project_tagline">By Coffee and Data - A simplified approach to D3 </h3>
 
         </header>
     </div>
@@ -45,8 +45,8 @@
 				<li>Graph Features</b>: canvas.featureFunction()</li>
 			</ol>
 		</p>
-			<pre class="prettyprint">
-				<code>
+			<pre class="prettyprint"><code>//institution type = "character" | score type = "numeric"
+
 //canvas(id, width, height)
 var barPlot = canvas("barPlot", 800, 650, "#main_content_wrap");	
 barPlot.barPlot(USAdata, "institution", "score"); //barPlot(data, x, y)
@@ -56,29 +56,26 @@ barPlot.createTips("world_rank") //tooltip data variable
 var fillColor = function(d) { return "#728c3f"; } //static color 
 barPlot.colorFeature("instiution", fillColor) // colorFeature( fill by variable, fill scale)
 barPlot.updateDesc("", "Score", "Top 40 Internationally Ranked USA Institution") //updateDesc(x label, yLabel, TItle)
-barPlot.rotateText("x", -90, "end", -1, -.5) //rotateText(axis to rate, by degrees, text append at, move text by , move text by)
-				</code>
-			</pre>
+//rotateText(axis to rate, by degrees, text append at, move text by , move text by)
+barPlot.rotateText("x", -90, "end", -1, -.5)
+</code></pre>
 
 		<p>
-		Robust D3 power is to simplify attributes for a plot. For example, In order to create a horizontal barplot, all you have to assign is the numeric value in the x axis and character value in the y axis. Robust D3 handles scaling. 
+		Robust D3 approach to visulization is to simplify plot attributes. For example, the only differences between creating a horizontal and a vertical barplot is which axis is assigned the numeric value. If x is numeric, then Robust D3 will return a horizontal barplot. If y is numeric, then it will return a vertical barplot.  Robust D3 handles scaling. 
 		</p>
-			<pre class="prettyprint">
-				<code>
-// Horizontal bar plot
+<pre class="prettyprint"><code>// Horizontal bar plot
 var horizontalBarPlot = canvas("HorizontalbarPlot", 800, 650, "#main_content_wrap");	
-horizontalBarPlot.barPlot(data2015, "score", "institution"); //score is an integer field and instituion is a character field
+//score is an integer field and instituion is a character field
+horizontalBarPlot.barPlot(data2015, "score", "institution"); 
 
 // Graph Features
 horizontalBarPlot.createTips("country")
-var countryScale = d3.scaleOrdinal().range(["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"]);
-horizontalBarPlot.colorFeature("country", countryScale)
+colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"] //Set of colors
+var countryScale = d3.scaleOrdinal().range(colorArray1); //D3 method for ordinal color scale range mapping
+horizontalBarPlot.colorFeature("country", countryScale) // Apply color scale range to category (aka color by feature)
 horizontalBarPlot.updateDesc("Score", "", "Top 30 World Ranked Institution ")
-				</code>
+</code></pre>
       </section>
-		<p>
-			
-		</p>
     </div>
 
     <!-- FOOTER  -->

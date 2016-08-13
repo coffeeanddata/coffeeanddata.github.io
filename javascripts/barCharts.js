@@ -34,7 +34,8 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 	var horizontalBarPlot = canvas("HorizontalbarPlot", 700, 650, "#main_content_wrap");	
 	horizontalBarPlot.barPlot(data2015, "score", "institution");
 	horizontalBarPlot.createTips("country")
-	var countryScale = d3.scaleOrdinal().range(["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"]);
+	colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"]
+	var countryScale = d3.scaleOrdinal().range(colorArray1);
 	horizontalBarPlot.colorFeature("country", countryScale)
 	horizontalBarPlot.updateDesc("Score", "", "Top 30 World Ranked Institution ")
 
@@ -65,8 +66,6 @@ d3.csv("getData/world-university-ranking/cwurData.csv", dataScrub ,function(data
 	barChartUpdate.updateDesc("", "Number of Publications" ,"Number of Publication per University of California")
 	barChartUpdate.rotateText("x", -90, "end", -1, -.5) //rotateText(axis to rate, by degrees, text append at, move text by , move text by)
 
-	getButton = document.getElementsByClassName("stackedandGrouped_updateButton")
-	setTimeout(getButton[1].click(), 1000)
 
 
 	var HbarChartUpdate = canvas("HorizontalstackedandGrouped", 700, 650, "#main_content_wrap");	

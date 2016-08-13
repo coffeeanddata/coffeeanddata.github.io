@@ -27,7 +27,6 @@ canvas = function(barId, width, height, container){
 		setupCanvas = new setCanvas(width, height),
 		outline = setupCanvas.outline;
 
-
 	
 	var div = d3.select(container)
 		.append("div")
@@ -507,9 +506,6 @@ setCanvas.prototype.barChartOnTransition = function(onClickText){
 
 }
 
-	
-	
-			
  
 
 
@@ -520,12 +516,12 @@ setCanvas.prototype.barChartTransition = function(){
 		currentObj    = this;
 
 	createForm = d3.select("div#" + this.plotID)
-		.append("form")
+		.append("div")
 		.style("position",  "relative")
-		.style("width", "200px")
-		.style("height", "auto")
-		.style("left", outline.width + outline.leftMargin - 40 + "px" )
-		.style("top", -(outline.height + outline.topMargin + outline.bottomMargin) + 20 + "px")
+		.style("width", "120px")
+		.style("height", "20px")
+		.style("left", outline.width + outline.leftMargin + outline.rightMargin - 150 + "px" )
+		.style("top", -(outline.height + outline.topMargin + outline.bottomMargin)  + outline.topMargin/2  - 20 + "px")
 		.style("background-color", "transparent")
 
 	var newLabels = createForm.selectAll("label.barChartUdpate").data(labels);
