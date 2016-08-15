@@ -4,7 +4,7 @@
 setCanvas =  function(width, height){
 	this.outline = {}
 	var outline = this.outline;
-	var chartMargin   = {top: height*.10, right: width*.10, bottom: height*.20, left: width*.15},
+	var chartMargin   = {top: height*.10, right: width*.15, bottom: height*.20, left: width*.15},
 		chartWidth  = width  - chartMargin.left - chartMargin.right,
 		chartHeight = height - chartMargin.top  - chartMargin.bottom;
 	outline.width = chartWidth;
@@ -147,17 +147,72 @@ setCanvas.prototype.updateDesc = function(xLabel, yLabel, mainTitle){
 
 
 
-setCanvas.prototype.colorFeature = function(variableKey, color){
+setCanvas.prototype.colorBy= function(variableKey, color, appendLegend){
 	var CP = this.canvasProperties, data = CP.data,
 		graph = this.plot.select("g.mainGraph");
 
 	var selectValue = CP.mainElement + "." + CP.mainElementClass,
-		getScatter = graph.selectAll(selectValue).data(data);
-	getScatter.attr("fill", function(d) { return color(d[variableKey]); });
+		getScatter = graph.selectAll(selectValue).data(data),
+		storeColorScale = {};
+	
+	getScatter.attr("fill", function(d) {
+		var keyValue = d[variableKey], returnValue =  color(keyValue); 
+		
+		if(storeColorScale[keyValue] === undefined) {  storeColorScale[keyValue] = returnValue; } 
+		return returnValue; 
+	});
 	CP.colorScale = color;
 	CP.colorScaleValue = variableKey;
+	if(appendLegend){ this.legend(storeColorScale); }
 }
 
+setCanvas.prototype.legend = function(colorScaleObj){		
+	var getPlot = this.plot, legendItem = "circle",
+		emptySelection = getPlot.select("g.robustLegend").empty(),
+		outline = this.outline,
+		circleRadius = 6;
+	if(emptySelection === true){ 
+	getPlot.append("g")
+		.attr("class", "robustLegend")
+		.attr("transform", "translate(" + (outline.leftMargin + outline.width) + "," +  outline.topMargin + ")");		
+	}
+
+	var getLegend = getPlot.select("g.robustLegend"),
+		getLegendArray = Object.keys(colorScaleObj).map(function (key) { return { color : colorScaleObj[key], keyValue : key} }),
+		legendItems = getLegend.selectAll(legendItem + ".legendItem").data(getLegendArray),
+		legendText = getLegend.selectAll("text.legendItem").data(getLegendArray);
+	
+	
+	//Enter
+	legendItems.enter().append(legendItem)
+		.attr("class", "legendItem")
+	.merge(legendItems) //.transition(graphTrans)
+		.attr("fill", function(d) { return d.color; })
+		.attr("cx", function(x){ return outline.rightMargin/5; })
+		.attr("cy", function(x, i){ return i*25; })
+		.attr("r", circleRadius) 
+	
+	//Exit
+	legendItems.exit()
+		.transition().duration(1000)
+			.attr("r", 0)
+			.remove();
+
+			
+	legendText.enter().append("text")
+		.attr("class", "legendItemsText")
+	.merge(legendText)
+		.text(function(d) {return d.keyValue; })
+		.attr("x", outline.rightMargin/5 + circleRadius + 5)
+		.attr("y", function(x,i) { return i*25 + circleRadius  - 3; })
+		.attr("font-size", "13")
+		.attr("text-anchor", "start")
+	
+	legendText.exit()
+		.transition().duration(1000)
+			.remove();
+
+}
 
 setCanvas.prototype.createTips = function( toolTipText){
 	var	CP = this.canvasProperties, graph = this.plot.select("g.mainGraph"),
@@ -538,6 +593,9 @@ setCanvas.prototype.barChartTransition = function(){
 			currentObj.barChartOnTransition(d)
 		})
 }
+
+
+
 
 
 

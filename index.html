@@ -54,10 +54,11 @@ barPlot.barPlot(USAdata, "institution", "score"); //barPlot(data, x, y)
 //The rest of the code are features to make visually pleasing graphs
 barPlot.createTips("world_rank") //tooltip data variable
 var fillColor = function(d) { return "#728c3f"; } //static color 
-barPlot.colorFeature("instiution", fillColor) // colorFeature( fill by variable, fill scale)
-barPlot.updateDesc("", "Score", "Top 40 Internationally Ranked USA Institution") //updateDesc(x label, yLabel, TItle)
+//colorFeature(fill by variable, fill scale, [optional boolean] append legend)
+barPlot.colorFeature("institution", fillColor) 
+barPlot.updateDesc("", "Score", "Top 30 Internationally Ranked USA Institution") //updateDesc(x label, yLabel, Title)
 //rotateText(axis to rate, by degrees, text append at, move text by , move text by)
-barPlot.rotateText("x", -90, "end", -1, -.5)
+barPlot.rotateText("x", -60, "end", -1, -.5)
 </code></pre>
 
 		<p>
@@ -72,7 +73,7 @@ horizontalBarPlot.barPlot(data2015, "score", "institution");
 horizontalBarPlot.createTips("country")
 colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"] //Set of colors
 var countryScale = d3.scaleOrdinal().range(colorArray1); //D3 method for ordinal color scale range mapping
-horizontalBarPlot.colorFeature("country", countryScale) // Apply color scale range to category (aka color by feature)
+horizontalBarPlot.colorFeature("country", countryScale, true) // Apply true as the third element to append Legend
 horizontalBarPlot.updateDesc("Score", "", "Top 30 World Ranked Institution ")
 </code></pre>
       </section>
