@@ -45,10 +45,11 @@
 				<li>Graph Features</b>: canvas.featureFunction()</li>
 			</ol>
 		</p>
-			<pre class="prettyprint"><code>//institution type = "character" | score type = "numeric"
-
+			<pre class="prettyprint"><code>
+//institution type = "character" | score type = "numeric"
 //canvas(id, width, height)
 var barPlot = canvas("barPlot", 800, 650, "#main_content_wrap");	
+barPlot.updateMargin("bottom", .25)
 barPlot.barPlot(USAdata, "institution", "score"); //barPlot(data, x, y)
 
 //The rest of the code are features to make visually pleasing graphs
@@ -57,8 +58,8 @@ var fillColor = function(d) { return "#728c3f"; } //static color
 //colorFeature(fill by variable, fill scale, [optional boolean] append legend)
 barPlot.colorFeature("institution", fillColor) 
 barPlot.updateDesc("", "Score", "Top 30 Internationally Ranked USA Institution") //updateDesc(x label, yLabel, Title)
-//rotateText(axis to rate, by degrees, text append at, move text by , move text by)
-barPlot.rotateText("x", -60, "end", -1, -.5)
+//rotateText(axis to rate, by degrees, text append at, move text by X down, move text by X right)
+barPlot.rotateText("x", -60, "end", -1, 0)
 </code></pre>
 
 		<p>
@@ -66,6 +67,7 @@ barPlot.rotateText("x", -60, "end", -1, -.5)
 		</p>
 <pre class="prettyprint"><code>// Horizontal bar plot
 var horizontalBarPlot = canvas("HorizontalbarPlot", 800, 650, "#main_content_wrap");	
+horizontalBarPlot.updateMargin("left", .23)
 //score is an integer field and instituion is a character field
 horizontalBarPlot.barPlot(data2015, "score", "institution"); 
 
