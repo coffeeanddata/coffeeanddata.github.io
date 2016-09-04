@@ -231,6 +231,12 @@ setCanvas.prototype.legend = function(colorScaleObj){
 		.attr("cx",   function(x){    return outline.rightMargin/5; })
 		.attr("cy",   function(x, i){ return i*25; })
 		.attr("r", circleRadius) 
+		.on("click", function(getText){ 
+			var getKeyClass = ".legendKey_" + getText.keyValue.replace(" ", "_"),
+				getCircle = getLegend.select("circle" + getKeyClass);
+				getObj.legendFilter(getText, getCircle) 
+			
+		});
 	
 	//Exit
 	legendItems.exit().remove();
@@ -247,7 +253,7 @@ setCanvas.prototype.legend = function(colorScaleObj){
 			var getKeyClass = ".legendKey_" + getText.keyValue.replace(" ", "_"),
 				getCircle = getLegend.select("circle" + getKeyClass);
 			getObj.legendFilter(getText, getCircle) 
-		})
+		});
 	
 	legendText.exit().remove();
 
