@@ -49,6 +49,7 @@ d3.csv("getData/world-university-ranking/cwurData_filtered.csv", dataScrub ,func
 	var countryScale = d3.scaleOrdinal().range(colorArray1);
 	horizontalBarPlot.colorBy("country", countryScale, true)
 	horizontalBarPlot.updateDesc("Score", "", "Top 25 World Ranked Institution ")
+	addExtraText(horizontalBarPlot);
 
 	// grouped bar plot
 	dataUC = data.filter(function(x) { return x.institution.indexOf("UC") >= 0; }).slice(0, 30)
@@ -59,11 +60,11 @@ d3.csv("getData/world-university-ranking/cwurData_filtered.csv", dataScrub ,func
 	canvasUC.createTips("year")
 	canvasUC.updateDesc("", "World Ranking", "University of California World Ranking (Higher is Better)")
 	canvasUC.rotateText("x", -60, "end", -2, -7) //rotateText(axis to rate, by degrees, text append at, move text horizontal by , move text veritcal by)
+	addExtraText(canvasUC);
 
 
 	
 	// Scatterplot example
-	
 	var getTopEmployment = data.filter(function(x) {return x.alumni_employment < 100; })
 	var SP = canvas("scatterPlot", 700, 650, "#main_content_wrap");
 	SP.updateMargin("left", .10)
@@ -72,6 +73,7 @@ d3.csv("getData/world-university-ranking/cwurData_filtered.csv", dataScrub ,func
 	SP.updateDesc("World Ranking", "Alumini Employment Ranking", "World Ranking vs Alumni Employment Ranking")
 	SP.colorBy("country", countryScale, true)
 	SP.createTips("year")
+	addExtraText(SP);
 	
 
 	// Horizontal Stacked Barplot
@@ -80,6 +82,7 @@ d3.csv("getData/world-university-ranking/cwurData_filtered.csv", dataScrub ,func
 	canvasUC_H_stacked.colorBy("year", countryScale, true)
 	canvasUC_H_stacked.createTips("year")
 	canvasUC_H_stacked.updateDesc( "World Ranking","" ,"University of California World Ranking (Higher is Better)")
+	addExtraText(canvasUC_H_stacked);
 	
 
 	// Horizontal Stacked Barplot
