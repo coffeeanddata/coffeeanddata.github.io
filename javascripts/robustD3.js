@@ -458,8 +458,8 @@ setCanvas.prototype.setupBarPlot = function(data, xValue, yValue, gValue, stacke
 		.attr("class", CP.mainElementClass)
 		.attr("width",  function(d){ if(d.filterOutData){ return 0;}; return CP.barChartLogistics.widthFunction(d);})
 		.attr("height", function(d){ if(d.filterOutData){ return 0;}; return CP.barChartLogistics.heightFunction(d);})
-		.attr("y",  	function(d){ if(d.filterOutData){ return 0;}; return CP.barChartLogistics.yFunction(d);})			
-		.attr("x",      function(d){ if(d.filterOutData){ return 0;}; return CP.barChartLogistics.xFunction(d);}) 
+		.attr("y",  	function(d){ if(d.filterOutData){ return CP.yRestart;}; return CP.barChartLogistics.yFunction(d);})			
+		.attr("x",      function(d){ if(d.filterOutData){ return CP.xRestart;}; return CP.barChartLogistics.xFunction(d);}) 
 
 	bars.exit().remove();
 }
@@ -499,7 +499,7 @@ setCanvas.prototype.barPlot = function(data, xValue, yValue, gValue, stacked, fo
 setCanvas.prototype.setAxisType = function(data, xVal, yVal){
 	this.axisProperties = this.axisProperties || {};
 	this.axisAnchor = this.axisAnchor || {};
-	var AP = this.axisProperties;	
+	var AP = this.axisProperties, CP = this.canvasProperties;	
 
 	var tempXValObj = {};
 		tempYValObj = {};
@@ -509,17 +509,26 @@ setCanvas.prototype.setAxisType = function(data, xVal, yVal){
 		tempYValObj[typeof(d[yVal])] = true;
 	});
 
+
 	AP.xType = (tempXValObj.string) ? "string" : "number";
 	AP.yType = (tempYValObj.string) ? "string" : "number";
 
 
+	if(AP.xType === "string"){
+		AP.charAxis = xVal
+		AP.numAxis = yVal
+		CP.xRestart = 0;
+		CP.yRestart = this.outline.height;
+	}else{
+		AP.charAxis = yVal
+		AP.numAxis =  xVal
+		CP.xRestart = 0;
+		CP.yRestart = 0;
+	}
 	/*
-	AP.xType = typeof(data[0][xVal])
-	AP.yType = typeof(data[0][yVal]),
-	*/
 	AP.charAxis = (AP.xType === "string") ? xVal : yVal,
 	AP.numAxis =  (AP.yType === "string") ? xVal : yVal;
-
+	*/
 }
 
 

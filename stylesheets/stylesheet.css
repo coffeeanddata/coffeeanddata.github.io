@@ -280,6 +280,13 @@ Full-Width Styles
   /* max-width: 640px; */
   padding: 20px 10px;
   margin: 0 auto;
+  clear: left;
+}
+
+.inner_plots {
+	padding: 0px 0px 0px 30px;
+
+
 }
 
 #forkme_banner {

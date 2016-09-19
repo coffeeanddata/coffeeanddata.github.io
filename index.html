@@ -31,13 +31,14 @@
     </div>
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h4>
-			Welcome to Robust D3 HomePage
-		</h4>
-		<p>
-			Robust D3 follows the simplified approach of data visualization found in Python and R without trying to remove the signature visualization power found in D3. That being said, this is currently in beta, and Robust D3 only has 2 plots, barplots and scatterplots. The code below shows how easy it is to create the first barplot.
-		</p>
+		<section id="main_plots" class="inner inner_plots"></section>
+		<section id="main_content" class="inner">
+			<h4>
+				Welcome to Robust D3 HomePage
+			</h4>
+			<p>
+				Robust D3 follows the simplified approach of data visualization found in Python and R without trying to remove the signature visualization power found in D3. That being said, this is currently in beta, and Robust D3 only has 2 plots, barplots and scatterplots. The code below shows how easy it is to create the first barplot.
+			</p>
 		<p>
 			Only 3 steps are required to create a plot:
 			<ol>
@@ -80,6 +81,7 @@ horizontalBarPlot.colorFeature("country", countryScale, true) // Apply true as t
 horizontalBarPlot.updateDesc("Score", "", "Top 30 World Ranked Institution ")
 </code></pre>
       </section>
+		<div id="secondary_plots" class="inner inner_plots"></div>
     </div>
 
     <!-- FOOTER  -->
