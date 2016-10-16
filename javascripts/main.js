@@ -16,7 +16,6 @@ addExtraText = function(plotObj){
 		.enter().append("text")
 	.merge(getTemporaryText)
 		.text("Click on Legend for Filter")
-		.style("font-size", "12px")
-		.style("font-familya", "san-serif")
+		.style("font-size", "11px")
 		.style("font-weight", "bold")
 }

@@ -12,8 +12,6 @@
     <title>Coffeeanddata.GitHub.io</title>
 	<script src="https://d3js.org/d3.v4.0.0-rc.2.js" charset="utf-8"></script>
 	<script src="javascripts/robustD3.js" charset="utf-8"></script>
-	<script src="javascripts/main.js" charset="utf-8"></script>
-	<script src="javascripts/barCharts.js" charset="utf-8"></script>
 	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
   </head>
@@ -37,7 +35,7 @@
 				Welcome to Robust D3 HomePage
 			</h4>
 			<p>
-				Robust D3 follows the simplified approach of data visualization found in Python and R without trying to remove the signature visualization power found in D3. That being said, this is currently in beta, and Robust D3 only has 2 plots, barplots and scatterplots. The code below shows how easy it is to create the first barplot.
+				Robust D3 follows the simplified approach of data visualization found in Python and R without trying to remove the signature visualization power found in D3. This is currently in beta and Robust D3 only has 2 plots - barplots and scatterplots. The code below shows how easy it is to create the first barplot.
 			</p>
 		<p>
 			Only 3 steps are required to create a plot:
@@ -49,36 +47,40 @@
 		</p>
 			<pre class="prettyprint"><code>
 //institution type = "character" | score type = "numeric"
-//canvas(id, width, height)
-var barPlot = canvas("barPlot", 800, 650, "#main_content_wrap");	
-barPlot.updateMargin("bottom", .25)
+//canvas(id, width, height);
+var barPlot = canvas("barPlot", 600, 600, "#secondary_plots");	
+barPlot.updateMargin("bottom", .25);
 barPlot.barPlot(USAdata, "institution", "score"); //barPlot(data, x, y)
 
+
 //The rest of the code are features to make visually pleasing graphs
-barPlot.createTips("world_rank") //tooltip data variable
+barPlot.createTips("world_rank"); //tooltip data variable
 var fillColor = function(d) { return "#728c3f"; } //static color 
-//colorFeature(fill by variable, fill scale, [optional boolean] append legend)
-barPlot.colorFeature("institution", fillColor) 
-barPlot.updateDesc("", "Score", "Top 30 Internationally Ranked USA Institution") //updateDesc(x label, yLabel, Title)
-//rotateText(axis to rate, by degrees, text append at, move text by X down, move text by X right)
-barPlot.rotateText("x", -60, "end", -1, 0)
+//colorBy(fill by variable, fill scale, [optional boolean] append legend)
+barPlot.colorBy("institution", fillColor);
+
+barPlot.updateDesc("", "Score", "Top 25 Internationally Ranked USA Institution"); //updateDesc(x label, yLabel, Title)
+//rotateText(axis to rate, by degrees, text append at, move text horizontal by , move text veritcal by)
+barPlot.rotateText("x", -60, "end", -2, -7); 
 </code></pre>
 
-		<p>
-		Robust D3 approach to visulization is to simplify plot attributes. For example, the only differences between creating a horizontal and a vertical barplot is which axis is assigned the numeric value. If x is numeric, then Robust D3 will return a horizontal barplot. If y is numeric, then it will return a vertical barplot.  Robust D3 handles scaling. 
+		<p>Robust D3's main objective is to simplify plot attributes. For example, in a barplot the axis value will determine whether the plot will return a horizontal or veritcal barplot. If x is numeric, then Robust D3 will return a horizontal barplot. If y is numeric, then it will return a vertical barplot.  Robust D3 handles scaling. 
 		</p>
 <pre class="prettyprint"><code>// Horizontal bar plot
-var horizontalBarPlot = canvas("HorizontalbarPlot", 800, 650, "#main_content_wrap");	
-horizontalBarPlot.updateMargin("left", .23)
+var horizontalBarPlot = canvas("HorizontalbarPlot", 600, 600, "#main_plots");	
+horizontalBarPlot.updateMargin("right", .17);
+horizontalBarPlot.updateMargin("left", .20);
+
 //score is an integer field and instituion is a character field
-horizontalBarPlot.barPlot(data2015, "score", "institution"); 
+horizontalBarPlot.barPlot(data2015, "score", "institution");
 
 // Graph Features
-horizontalBarPlot.createTips("country")
-colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"] //Set of colors
+horizontalBarPlot.createTips("country");
+colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"]; //Set color
 var countryScale = d3.scaleOrdinal().range(colorArray1); //D3 method for ordinal color scale range mapping
-horizontalBarPlot.colorFeature("country", countryScale, true) // Apply true as the third element to append Legend
-horizontalBarPlot.updateDesc("Score", "", "Top 30 World Ranked Institution ")
+horizontalBarPlot.colorBy("country", countryScale, true); // Apply true as the third element to append Legend
+horizontalBarPlot.updateDesc("Score", "", "Top 25 World Ranked Institution ");
+addExtraText(horizontalBarPlot);
 </code></pre>
       </section>
 		<div id="secondary_plots" class="inner inner_plots"></div>
@@ -90,5 +92,7 @@ horizontalBarPlot.updateDesc("Score", "", "Top 30 World Ranked Institution ")
         <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
+	<script src="javascripts/main.js" charset="utf-8"></script>
+	<script src="javascripts/barCharts.js" charset="utf-8"></script>
   </body>
 </html>

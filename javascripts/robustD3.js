@@ -186,7 +186,7 @@ setCanvas.prototype.updateDesc = function(xLabel, yLabel, mainTitle){
 			"mainTitle" : { "xCord"    : (outline.leftMargin + outline.width/2),
 							"yCord"    : (outline.topMargin/2), 
 							"rotate"   : 0,  
-							"fontSize" : (outline.width/ 40),
+							"fontSize" : (outline.totalWidth/ 50),
 							"label"    : mainTitle,
 							"dx"       : 0,
 							"dy"       : 0,
@@ -246,7 +246,8 @@ setCanvas.prototype.legend = function(colorScaleObj){
 	this.legendProperties = {
 		item    : legendItem,
 		radius  : circleRadius,
-		mainKey : this.canvasProperties.colorScaleValue
+		mainKey : this.canvasProperties.colorScaleValue,
+		textPX  : Math.ceil(outline.totalWidth/ 55)
 	}
 	getPlot.append("g")
 		.attr("class", "robustLegend")
@@ -258,7 +259,8 @@ setCanvas.prototype.legend = function(colorScaleObj){
 		legendText = getLegend.selectAll("text.legendItem").data(getLegendArray);
 	
 	//Enter
-	legendItems.enter().append(legendItem)
+	legendItems.enter()
+		.append(legendItem)
 	.merge(legendItems) 
 		.attr("class", function(d){
 			 return "legendItem legend" + legendItem + " legendKey_" + d.keyValue.replace(/ /g, "_").replace(/[|&;$%@"<>()+,]/g, ""); 
@@ -285,7 +287,8 @@ setCanvas.prototype.legend = function(colorScaleObj){
 		.text(function(d){ return d.keyValue; })
 		.attr("x", outline.rightMargin/5 + circleRadius + 5)
 		.attr("y", function(x,i) { return i*25 + circleRadius  - 3; })
-		.attr("font-size", "13")
+		.attr("font-size", this.legendProperties.textPX)
+		.attr("font-weight", "weight")
 		.attr("text-anchor", "start")
 		.on("click", function(getText) { 
 			var getKeyClass = ".legendKey_" + getText.keyValue.replace(/ /g, "_").replace(/[|&;$%@"<>()+,]/g, ""),
@@ -450,11 +453,13 @@ setCanvas.prototype.setupBarPlot = function(data, xValue, yValue, gValue, stacke
 		.attr("class", CP.mainElementClass)
 		.attr("width",  function(d){ if(d.filterOutData || AP.yType === "string"){ return 0;}; return CP.barChartLogistics.widthFunction(d);})
 		.attr("height", function(d){ if(d.filterOutData || AP.xType === "string"){ return 0;}; return CP.barChartLogistics.heightFunction(d);})
-		.attr("y", function(d){ return (AP.yType === "string") ? CP.barChartLogistics.yFunction(d) : outline.height; } ) 
-		.attr("x", function(d){ return (AP.xType === "string") ? CP.barChartLogistics.xFunction(d) : 0;} ) 
-		.attr("fill",   function(x) { return CP.colorScale(x[CP.colorScaleValue]); })
+		.attr("y",      function(d){ return (AP.yType === "string") ? CP.barChartLogistics.yFunction(d) : outline.height; } ) 
+		.attr("x",      function(d){ return (AP.xType === "string") ? CP.barChartLogistics.xFunction(d) : 0;} ) 
+		.attr("fill",   function(d){ return CP.colorScale(d[CP.colorScaleValue]); })
 	.merge(bars)
-		.transition().duration(1000).delay(function(d, i){ return(newPlot) ? i * 50 : 0;})
+		.transition()
+			.duration(1000)
+			.delay(function(d, i){ return (newPlot) ? i * 50 : 0;})
 		.attr("class", CP.mainElementClass)
 		.attr("width",  function(d){ if(d.filterOutData){ return 0;}; return CP.barChartLogistics.widthFunction(d);})
 		.attr("height", function(d){ if(d.filterOutData){ return 0;}; return CP.barChartLogistics.heightFunction(d);})

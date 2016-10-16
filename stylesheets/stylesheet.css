@@ -284,7 +284,7 @@ Full-Width Styles
 }
 
 .inner_plots {
-	padding: 0px 0px 0px 30px;
+	padding: 0px 0px 0px 40px;
 
 
 }
@@ -321,7 +321,7 @@ Full-Width Styles
 }
 
 #main_content {
-	max-width : 60%;
+	max-width : 75%;
 }
 
 #project_title {
