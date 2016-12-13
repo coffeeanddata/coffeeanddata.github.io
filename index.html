@@ -47,20 +47,18 @@
 		</p>
 			<pre class="prettyprint"><code>//institution type = "character" | score type = "numeric"
 //canvas(id, width, height);
-var barPlot = canvas("barPlot", 600, 600, "#secondary_plots");	
-barPlot.updateMargin("bottom", .25);
-barPlot.barPlot(USAdata, "institution", "score"); //barPlot(data, x, y)
+var horizontalBarPlot = canvas("HorizontalbarPlot", 600, 600, "#main_plots"); 
+horizontalBarPlot.updateMargin("right", .17);
+horizontalBarPlot.updateMargin("left", .20);
+horizontalBarPlot.barPlot(data2015, "score", "institution");
 
 
 //The rest of the code are features to make visually pleasing graphs
-barPlot.createTips("world_rank"); //tooltip data variable
-var fillColor = function(d) { return "#728c3f"; } //static color 
-//colorBy(fill by variable, fill scale, [optional boolean] append legend)
-barPlot.colorBy("institution", fillColor);
-
-barPlot.updateDesc("", "Score", "Top 25 Internationally Ranked USA Institution"); //updateDesc(x label, yLabel, Title)
-//rotateText(axis to rate, by degrees, text append at, move text horizontal by , move text veritcal by)
-barPlot.rotateText("x", -60, "end", -2, -7); 
+horizontalBarPlot.createTips("country");
+var colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"];
+var countryScale = d3.scaleOrdinal().range(colorArray1);
+horizontalBarPlot.colorBy("country", countryScale, true);
+horizontalBarPlot.updateDesc("Score", "", "Top 25 World Ranked Institution ");
 </code></pre>
 
 		<p>Robust D3's main objective is to simplify plot attributes. Using the same approach we are able to create scatter plots and Time Series lines.
@@ -68,9 +66,9 @@ barPlot.rotateText("x", -60, "end", -2, -7);
 <pre class="prettyprint"><code>//Scatter Plot
 //Create Canvas
 var SP = canvas("scatterPlot", 600, 600, "#main_plots");
-//Axis Margins
 SP.updateMargin("left", .10);
 SP.updateMargin("right", .17);
+
 //Scatter Plot
 SP.scatterPlot(getTopEmployment, "world_rank", "alumni_employment");
 
@@ -87,6 +85,7 @@ SP.createTips("year");
 <pre class="prettyprint"><code>//Line Plot
 //Create Canvas
   var timeSeriesPlot = canvas("timeSeriesPlot", 1220, 500, "#main_plots");  
+  
 //Plot Path
 timeSeriesPlot.timeSeries(data, 'date', 'Amount', 'City');
 
