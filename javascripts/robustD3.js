@@ -351,6 +351,7 @@ setCanvas.prototype.legendFilter = function(selectedItem, getShape){
 		}
 	})
 	if(CP.plotType === "barPlot") this.barPlot(CP.data, xVal, yVal, gVal, stackedVal);
+	else if(CP.mainElement == "path") console.log("Filter is unavailable for Time Series Line")
 	else this.scatterPlot(CP.data, xVal, yVal);
 }
 
