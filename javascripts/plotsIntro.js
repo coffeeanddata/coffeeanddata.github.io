@@ -45,7 +45,7 @@ d3.csv("getData/world-university-ranking/cwurData_filtered.csv", dataScrub ,func
 	horizontalBarPlot.barPlot(data2015, "score", "institution");
 
 	horizontalBarPlot.createTips("country");
-	colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"];
+	var colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"];
 	var countryScale = d3.scaleOrdinal().range(colorArray1);
 	horizontalBarPlot.colorBy("country", countryScale, true);
 	horizontalBarPlot.updateDesc("Score", "", "Top 25 World Ranked Institution ");
@@ -53,9 +53,12 @@ d3.csv("getData/world-university-ranking/cwurData_filtered.csv", dataScrub ,func
 
 	// grouped bar plot
 	dataUC = data.filter(function(x) { return x.institution.indexOf("UC") >= 0; }).slice(0, 30);
+
+	
 	
 	var canvasUC = canvas("groupBarPlot", 600, 600, "#secondary_plots");	
 	canvasUC.barPlot(dataUC, "institution", "world_rank_rev", "year"); 
+	
 	canvasUC.colorBy("year", countryScale, true);
 	canvasUC.createTips("year");
 	canvasUC.updateDesc("", "World Ranking", "University of California World Ranking (Higher is Better)");
@@ -94,4 +97,31 @@ d3.csv("getData/world-university-ranking/cwurData_filtered.csv", dataScrub ,func
 	barChartUpdate.updateDesc("", "Number of Publications" ,"Number of Publication per University of California"); 
 	barChartUpdate.rotateText("x", -60, "end", -2, -7);  //rotateText(axis to rate, by degrees, text append at, move text horizontal by , move text veritcal by)
 
-}); 
+
+
+
+var parseTime = d3.timeParse("%Y%m%d");
+setupType = function(d){
+	d.date = parseTime(d.date);
+	return d;
+};
+
+
+
+d3.csv("getData/tempData.csv", setupType, function(data){
+	
+	var timeSeriesPlot = canvas("timeSeriesPlot", 1220, 500, "#main_plots");	
+	timeSeriesPlot.timeSeries(data, 'date', 'Amount', 'City');
+	timeSeriesPlot.updateMargin("left", .1);
+	timeSeriesPlot.updateMargin("right", .17);
+	var colorArray1 = ["#1F77B4", "#D62728", "#9467BD"],
+	CitiesColor = d3.scaleOrdinal().range(colorArray1);
+
+	timeSeriesPlot.colorBy("City", CitiesColor, true);
+	timeSeriesPlot.updateDesc("Date", "Temperature, ºF", "Multi-Series Line Chart");
+	
+ });
+
+});
+
+

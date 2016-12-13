@@ -45,8 +45,7 @@
 				<li>Graph Features</b>: canvas.featureFunction()</li>
 			</ol>
 		</p>
-			<pre class="prettyprint"><code>
-//institution type = "character" | score type = "numeric"
+			<pre class="prettyprint"><code>//institution type = "character" | score type = "numeric"
 //canvas(id, width, height);
 var barPlot = canvas("barPlot", 600, 600, "#secondary_plots");	
 barPlot.updateMargin("bottom", .25);
@@ -64,23 +63,40 @@ barPlot.updateDesc("", "Score", "Top 25 Internationally Ranked USA Institution")
 barPlot.rotateText("x", -60, "end", -2, -7); 
 </code></pre>
 
-		<p>Robust D3's main objective is to simplify plot attributes. For example, in a barplot the axis value will determine whether the plot will return a horizontal or veritcal barplot. If x is numeric, then Robust D3 will return a horizontal barplot. If y is numeric, then it will return a vertical barplot.  Robust D3 handles scaling. 
+		<p>Robust D3's main objective is to simplify plot attributes. Using the same approach we are able to create scatter plots and Time Series lines.
 		</p>
-<pre class="prettyprint"><code>// Horizontal bar plot
-var horizontalBarPlot = canvas("HorizontalbarPlot", 600, 600, "#main_plots");	
-horizontalBarPlot.updateMargin("right", .17);
-horizontalBarPlot.updateMargin("left", .20);
+<pre class="prettyprint"><code>//Scatter Plot
+//Create Canvas
+var SP = canvas("scatterPlot", 600, 600, "#main_plots");
+//Axis Margins
+SP.updateMargin("left", .10);
+SP.updateMargin("right", .17);
+//Scatter Plot
+SP.scatterPlot(getTopEmployment, "world_rank", "alumni_employment");
 
-//score is an integer field and instituion is a character field
-horizontalBarPlot.barPlot(data2015, "score", "institution");
+//Scatter Plot Properties
+SP.updateDesc("World Ranking", "Alumini Employment Ranking", "Alumni Employment Ranking Impact on World Ranking");
+SP.colorBy("country", countryScale, true);
+SP.createTips("year"); 
+</code></pre>
 
-// Graph Features
-horizontalBarPlot.createTips("country");
-colorArray1 = ["#1F77B4", "#D62728", "#9467BD", "#FF7F0E", "#2CA02C", "#8C564B", "#FF6666", "#F8CA40"]; //Set color
-var countryScale = d3.scaleOrdinal().range(colorArray1); //D3 method for ordinal color scale range mapping
-horizontalBarPlot.colorBy("country", countryScale, true); // Apply true as the third element to append Legend
-horizontalBarPlot.updateDesc("Score", "", "Top 25 World Ranked Institution ");
-addExtraText(horizontalBarPlot);
+
+
+<p> The example below creates an identical verision of Mike Bostock Multi-Series Line Chart https://bl.ocks.org/mbostock/3884955 using Robust D3 approach. 
+</p>
+<pre class="prettyprint"><code>//Line Plot
+//Create Canvas
+  var timeSeriesPlot = canvas("timeSeriesPlot", 1220, 500, "#main_plots");  
+//Plot Path
+timeSeriesPlot.timeSeries(data, 'date', 'Amount', 'City');
+
+//Attributes
+timeSeriesPlot.updateMargin("left", .1);
+timeSeriesPlot.updateMargin("right", .17);
+var colorArray1 = ["#1F77B4", "#D62728", "#9467BD"],
+CitiesColor = d3.scaleOrdinal().range(colorArray1);
+timeSeriesPlot.colorBy("City", CitiesColor, true);
+timeSeriesPlot.updateDesc("Date", "Temperature, ºF", "Multi-Series Line Chart");
 </code></pre>
       </section>
 		<div id="secondary_plots" class="inner inner_plots"></div>

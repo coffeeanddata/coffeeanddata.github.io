@@ -108,7 +108,7 @@ setCanvas.prototype.setupScatterPlot = function(data, xValue, yValue, forceSelec
 	scatter.enter().append(CP.mainElement)
 		.attr("class", CP.mainElementClass)
 		.attr("r", 0)
-		.attr("fill",   function(x) { return CP.colorScale(x[CP.colorScaleValue]); })
+		.attr("fill", function(x){ return CP.colorScale(x[CP.colorScaleValue]); })
 	.merge(scatter)
 		.transition().duration(1000).delay(function(d, i){ return(newPlot) ? i * 5 : 0;})
 		.attr("class", CP.mainElementClass)
@@ -138,7 +138,7 @@ setCanvas.prototype.scatterPlot = function(data, xValue, yValue, forceSelect){
 			objectVals = [yValue,   xValue,   "ScatterPlot", "circle", 		"scatterPlotCircles", currentSelection];
 		this.objectProperties(objectKeys, objectVals)
 		this.setAxisType(this.canvasProperties.data, xValue, yValue);
-	}
+	}	
 
 	var CP = this.canvasProperties,
 		AP = this.axisProperties;
@@ -240,16 +240,27 @@ setCanvas.prototype.colorBy = function(variableKey, color, appendLegend){
 	var CP = this.canvasProperties, data = CP.data,
 		graph = this.plot.select("g.mainGraph");
 
+
 	var selectValue = CP.mainElement + "." + CP.mainElementClass,
-		getScatter = graph.selectAll(selectValue).data(data),
+		getMainElements = graph.selectAll(selectValue).data(data),
 		storeColorScale = {};
-
-	getScatter.attr("fill", function(d) {
-		var keyValue = d[variableKey], returnValue =  color(keyValue); 
-		if(storeColorScale[keyValue] === undefined) {  storeColorScale[keyValue] = returnValue; } 
-		return returnValue; 
-	});
-
+	
+	if(CP.mainElement === "path"){
+		var data = CP.gdata;
+		var getMainElements = graph.selectAll(selectValue).data(data)
+		getMainElements.style("stroke", function(d){
+			var keyValue = d['key'], returnValue =  color(keyValue); 
+			
+			if(storeColorScale[keyValue] === undefined){  storeColorScale[keyValue] = returnValue; }
+			return returnValue; 
+		});
+	}else{
+		getMainElements.attr("fill", function(d) {
+			var keyValue = d[variableKey], returnValue =  color(keyValue); 
+			if(storeColorScale[keyValue] === undefined) {  storeColorScale[keyValue] = returnValue; } 
+			return returnValue; 
+		});
+	}
 	CP.colorScale = color;
 	CP.colorScaleValue = variableKey;
 	if(appendLegend) this.legend(storeColorScale); 
@@ -280,10 +291,10 @@ setCanvas.prototype.legend = function(colorScaleObj){
 	legendItems.enter()
 		.append(legendItem)
 	.merge(legendItems) 
-		.attr("class", function(d){ return "legendItem legend" + legendItem + " legendKey_" + d.keyValue.replace(/ /g, "_").replace(/[|&;$%@"<>()+,]/g, "");  })
-		.attr("fill", function(d){    return d.color; })
-		.attr("cx",   function(x){    return outline.rightMargin/5; })
-		.attr("cy",   function(x, i){ return i*25; })
+		.attr("class", function(d){    return "legendItem legend" + legendItem + " legendKey_" + d.keyValue.replace(/ /g, "_").replace(/[|&;$%@"<>()+,]/g, "");  })
+		.attr("fill",  function(d){    return d.color; })
+		.attr("cx",    function(x){    return outline.rightMargin/5; })
+		.attr("cy",    function(x, i){ return i*25; })
 		.attr("r", circleRadius) 
 		.on("click", function(getText){ 
 			var getKeyClass = ".legendKey_" + getText.keyValue.replace(/ /g, "_").replace(/[|&;$%@"<>()+,]/g, ""),
@@ -545,10 +556,7 @@ setCanvas.prototype.setAxisType = function(data, xVal, yVal){
 		CP.xRestart = 0;
 		CP.yRestart = 0;
 	}
-	/*
-	AP.charAxis = (AP.xType === "string") ? xVal : yVal,
-	AP.numAxis =  (AP.yType === "string") ? xVal : yVal;
-*/
+
 }
 
 
@@ -622,13 +630,17 @@ setCanvas.prototype.rotateText = function(axis, rotate, anchor,  moveSide, moveU
 
 setCanvas.prototype.setAxisFunctions = function(){
 	return {
-		numberScatterPlot    : "numericBarPlot",
-		numberstackedBarPlot : "numericBarPlot",
-		stringstackedBarPlot : "charBarPlot",
-		numberbarPlot        : "numericBarPlot",
-		stringbarPlot        : "charBarPlot",
-		stringgroupedBarPlot : "charBarPlot",
-		numbergroupedBarPlot : "numericBarPlot"
+		numberScatterPlot     : "numericBarPlot",
+		numberstackedBarPlot  : "numericBarPlot",
+		stringstackedBarPlot  : "charBarPlot",
+		numberbarPlot         : "numericBarPlot",
+		stringbarPlot         : "charBarPlot",
+		stringgroupedBarPlot  : "charBarPlot",
+		numbergroupedBarPlot  : "numericBarPlot",
+		numberLinePlot        : "numericBarPlot",
+		numbergroupedLinePlot : "numericBarPlot",
+		timeLinePlot          : "timeTimePlot",
+		timegroupedLinePlot   : "timeTimePlot"
 	}
 }
 
@@ -675,7 +687,7 @@ setCanvas.prototype.charBarPlot = function(val, axisValue){
 
 
 setCanvas.prototype.numericBarPlot = function(val, axisValue){
-	var	data    = this.canvasProperties.data,
+	var data    = this.canvasProperties.data,
 		graph   = this.plot.select("g.mainGraph"),
 		outline = this.outline;
 
@@ -692,7 +704,7 @@ setCanvas.prototype.numericBarPlot = function(val, axisValue){
 
 	var valScale = d3.scaleLinear().range(this.axisProperties[axisValue + "Outline"]);
 
-	//map data values (x,y) to graph scale
+	// map data values (x,y) to graph scale
 	valScale.domain([(rangeVal[0]*.7).toFixed(2), (rangeVal[1] *1.1).toFixed(2)]);
 
 	// Create Axis group
@@ -711,20 +723,17 @@ setCanvas.prototype.numericBarPlot = function(val, axisValue){
 
 
 setCanvas.prototype.createAxis = function(xType, yType){
-	//	this.axisProperties = {}
 	var axisObject = this.axisProperties,
 		graph = this.plot.select("g.mainGraph");
-
-	//	this.axisProperties.NumericValue = (yType == "number") ? "height" : "width";
-	//	axisObject.xType = xType, axisObject.yType = yType;
 
 	allAxisFunctions = this.setAxisFunctions()
 	var graphClass   =	this.canvasProperties.plotType;
 
 
 	graph.selectAll(".axis").remove();
-	//if(this.plotID === "groupBarPlot2") debugger;
+	
 	this.axisProperties.yScale = this[allAxisFunctions[yType + graphClass]](this.canvasProperties.yValue, "y")
+	
 	this.axisProperties.xScale = this[allAxisFunctions[xType + graphClass]](this.canvasProperties.xValue, "x") 
 
 }
@@ -770,6 +779,177 @@ setCanvas.prototype.barChartTransition = function(){
 		currentObj.barChartOnTransition(d)
 	})
 }
+
+
+// Line plot
+
+setCanvas.prototype.timeSeries = function(data, xValue, yValue, gValue){
+	if(this.axisProperties === undefined){
+		var clonedData = newClone(data);
+		var objectKeys = ["data","yValue", "xValue", "gValue", "plotType", "mainElement", "mainElementClass", "colorScaleValue", "colorScale"],
+		objectVals = [clonedData,   yValue,   xValue,   gValue,   "LinePlot",  "path", "linePlot", gValue, function(d) { return "#000000";}] 
+		this.objectProperties(objectKeys, objectVals)
+		this.setLineAxisType(clonedData, xValue, yValue);
+	}else{
+		var currentSelection = forceSelect || this.canvasProperties.mainElement + "." + this.canvasProperties.mainElementClass,
+		objectKeys = ["yValue", "xValue", "gValue", "plotType", "mainElement", "mainElementClass", "forceSelect"],
+		objectVals = [yValue,   xValue,   gValue,   "LinePlot",  "path", "linePlot", currentSelection];
+		this.objectProperties(objectKeys, objectVals)
+		this.setLineAxisType(this.canvasProperties.data, xValue, yValue);
+	}
+	var CP = this.canvasProperties, AP = this.axisProperties;
+
+	
+	this.groupedLinePlot(gValue, yValue, xValue)
+
+	this.createAxis(AP.xType, AP.yType);
+	this.timeSeriesLogistics(AP.xType, AP.yType)
+
+	
+	this.setupTimeSeries(CP.gdata, xValue, yValue, gValue);
+	if(this.mainDesc == undefined){
+		this.updateDesc(xValue.toUpperCase(), yValue.toUpperCase(), xValue.toUpperCase() + " vs. " + yValue.toUpperCase())
+	}
+}
+
+
+
+
+
+
+
+setCanvas.prototype.setupTimeSeries = function(data, xValue, yValue, forceSelect){
+	var CP = this.canvasProperties,
+		selectValue = CP.mainElement + "." + CP.mainElementClass,
+		graph = this.plot.select("g.mainGraph"),
+		outline = this.outline;
+
+	// need to update to handle more than 10 Categories
+//	d3OrdinalScale = d3.scaleOrdinal(d3.schemeCategory10);
+//	d3OrdinalScale.domain(data.map(function(c) { return c.key; }));
+
+
+
+	var line = d3.line()
+			.curve(d3.curveBasis)
+			.x(function(d){return CP.timeSeriesLogistics.xFun(d); })
+			.y(function(d){return CP.timeSeriesLogistics.yFun(d); });
+
+
+	
+	if(this.D3Properties === undefined){
+		this.D3Properties = {};
+		var newPlot = true;
+	}
+	//Mainly used for transitioning from different plot types (i.e. barplot to scatter
+	if(selectValue.split(".")[0] != CP.mainElement) graph.selectAll(selectValue).remove();
+
+	// Bind Data
+	var scatter = graph.selectAll(selectValue).data(data);
+
+	
+	//Enter
+	scatter.enter().append(CP.mainElement)
+		.attr("class", CP.mainElementClass)
+		.attr("fill", "none")
+	.merge(scatter)
+		.attr("class", CP.mainElementClass)
+		.attr("d", function(d){ return line(d.values); })
+		.style("stroke",  function(d){ return CP.colorScale(d[CP.colorScaleValue]); }) 
+		.style("stroke-width", "1.5px");
+//.style("stroke", function(d) { return d3OrdinalScale(d.key); })
+
+	//Exit
+	scatter.exit().remove();
+
+}
+
+
+
+setCanvas.prototype.setLineAxisType = function(data, xVal, yVal){
+	this.axisProperties = this.axisProperties || {};
+	this.axisAnchor = this.axisAnchor || {};
+	var AP = this.axisProperties, 
+		CP = this.canvasProperties,
+		tempXValObj = {},
+		tempYValObj = {};
+
+	AP.xType = "time";
+	AP.yType =  "number";
+
+	AP.timeAxis = xVal
+	AP.numAxis = yVal
+	CP.xRestart = 0;
+	CP.yRestart = this.outline.height;
+
+}
+
+
+
+setCanvas.prototype.groupedLinePlot = function(gValue){
+	var CP = this.canvasProperties;
+	CP.mainElementClass = typeof(gValue) == "string" ? 'groupedLinePlot' : CP.mainElementClass
+
+	
+
+	if(typeof(gValue) == "string"){
+		var getKeys = [],
+		groupedByCharAxis = {},
+		groupByGValue    =  d3.nest().key(function(k) { return k[gValue];    }).entries(CP.data);
+		
+		groupByGValue.map(function(d){  getKeys.push(d["key"]); })
+		this.canvasProperties.groupValueKeys = getKeys;
+		CP.gdata = groupByGValue;
+	
+	} else{
+		CP.gdata = CP.data;
+	}
+}
+
+
+
+
+setCanvas.prototype.timeTimePlot = function(val, axisValue){
+	var data    = this.canvasProperties.data,
+		graph   = this.plot.select("g.mainGraph"),
+		outline = this.outline;
+
+	graph.selectAll("." + axisValue + "Axis").remove();
+
+
+	var rangeVal  = d3.extent(data, function(x){ return x[val]; });
+	this.axisProperties.timeRange = rangeVal;
+	this.axisProperties[axisValue + "Outline"] = (axisValue == "y") ? [outline.height, 0] : [0, outline.width];
+
+	var valScale = d3.scaleTime().range(this.axisProperties[axisValue + "Outline"]);
+
+	// map data values (x,y) to graph scale
+	valScale.domain(rangeVal);
+
+	// Create Axis group
+	var axisGroup = (axisValue == "y") ?  graph.append("g").attr("class", axisValue + "Axis axis") : graph.append("g").attr("transform", "translate(0, " + outline.height + ")").attr("class", axisValue + "Axis axis");
+
+	// Create Axis
+	var setAxis = (axisValue == "y") ?  d3.axisLeft(valScale) : d3.axisBottom(valScale);
+
+	// Call Axis
+	axisGroup.transition().duration(1000).call(setAxis).selectAll("text").attr("class", axisValue + "AxisText axisText");
+	return valScale;
+}
+
+
+setCanvas.prototype.timeSeriesLogistics = function(typeofX, typeofY){
+	this.canvasProperties.timeSeriesLogistics = {}
+	var	tsLog = this.canvasProperties.timeSeriesLogistics,
+		CP = this.canvasProperties,
+		AP = this.axisProperties;
+
+	tsLog.xFun = function(x) { return AP.xScale(x[CP.xValue]); }
+	tsLog.yFun = function(x) { return AP.yScale(x[CP.yValue]); }
+}
+
+
+
 
 
 // http://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
